@@ -1,2 +1,2 @@
 # prom2influx
-migrate historical data from Prometeus to InfluxDB
+migrate historical data from Prometheus to InfluxDB
