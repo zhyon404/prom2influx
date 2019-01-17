@@ -66,11 +66,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	start, err := time.Parse(cfg.start, time.RFC3339)
+	start, err := time.Parse(time.RFC3339, cfg.start)
 	if err != nil {
 		log.Println(err)
 	}
-	end, err := time.Parse(cfg.end, time.RFC3339)
+	end, err := time.Parse(time.RFC3339, cfg.end)
 	if err != nil {
 		log.Println(err)
 	}
