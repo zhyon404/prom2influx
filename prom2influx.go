@@ -133,9 +133,8 @@ func (t *Trans) runOne(name string) error {
 	return nil
 }
 
-var externalLabels = map[string]string{"monitor": "codelab-monitor"}
-
 func (t *Trans) valueToInfluxdb(name string, v model.Value) (bps []client.BatchPoints) {
+	var externalLabels = map[string]string{"monitor": "codelab-monitor"}
 	switch v.(type) {
 	case model.Matrix:
 		v := v.(model.Matrix)
