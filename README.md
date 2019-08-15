@@ -3,7 +3,7 @@ migrate historical data from Prometheus to InfluxDB
 
 ## Building prom2influx
 
-You can use go to retireve all the dependencies and then build an executable
+You can use go to retrieve all the dependencies and then build an executable
 ```
 cd cmd/prom2influx
 go get -u github.com/influxdata/influxdb1-client
