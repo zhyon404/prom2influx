@@ -7,13 +7,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/api"
 	"github.com/prometheus/client_golang/api/prometheus/v1"
-	"github.com/zhyon404/prom2influx"
 	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
 	"net/url"
 	"os"
 	"path/filepath"
 	"time"
+	"main/transfer"
 )
 
 type config struct {
@@ -90,6 +90,6 @@ func main() {
 		Address: cfg.prometheusURL,
 	})
 	api := v1.NewAPI(c)
-	t := prom2influx.NewTrans(cfg.influxdbDatabase, start, end, cfg.step, api, con, cfg.c, cfg.retry)
+	t := transfer.NewTrans(cfg.influxdbDatabase, start, end, cfg.step, api, con, cfg.c, cfg.retry)
 	log.Fatalln(t.Run(context.Background()))
 }

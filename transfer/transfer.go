@@ -1,4 +1,4 @@
-package prom2influx
+package transfer
 
 import (
 	"context"

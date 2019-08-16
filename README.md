@@ -5,13 +5,6 @@ migrate historical data from Prometheus to InfluxDB
 
 You can use go to retrieve all the dependencies and then build an executable
 ```
-cd cmd/prom2influx
-go get -u github.com/influxdata/influxdb1-client
-go get -u github.com/pkg/errors
-go get -u github.com/prometheus/client_golang/api
-go get -u github.com/prometheus/client_golang/api/prometheus/v1
-go get -u github.com/zhyon404/prom2influx
-go get -u gopkg.in/alecthomas/kingpin.v2
 go build
 ```
 
