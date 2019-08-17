@@ -1,4 +1,4 @@
-package prom2influx
+package transfer
 
 import (
 	"context"
@@ -38,7 +38,8 @@ type Trans struct {
 }
 
 func (t *Trans) Run(ctx context.Context) error {
-	names, err := t.p.LabelValues(ctx, "__name__")
+	names, warn, err := t.p.LabelValues(ctx, "__name__")
+	_ = warn
 	if err != nil {
 		return err
 	}
@@ -105,11 +106,12 @@ func (t *Trans) runOne(name string) error {
 		end := start.Add(t.Step * 60 * 1)
 		log.Println("one...", start.Format(time.RFC3339), end.Format(time.RFC3339))
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*10)
-		v, err := t.p.QueryRange(ctx, name, v1.Range{
+		v, warn, err := t.p.QueryRange(ctx, name, v1.Range{
 			Start: start,
 			End:   end,
 			Step:  t.Step,
 		})
+		_ = warn
 		if err != nil {
 			panic("")
 			return err
