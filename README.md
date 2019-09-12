@@ -19,8 +19,11 @@ Flags:
                            --help-man).
       --influxdb-url=""    The URL of the remote InfluxDB server to send samples
                            to. None, if empty.
-      --prometheus-url=""  The URL of the remote prometheus server to read
-                           samples to. None, if empty.
+      --prometheus-url=""  The URL of the remote prometheus server to read samples to. None, if empty.
+
+      --monitor-label="codelab-monitor"  
+                           Prometheus Attach these labels to any time series or alerts when communicating with external systems. codelab-monitor, if empty.
+
       --influxdb.database="prometheus"
                            The name of the database to use for storing samples
                            in InfluxDB.

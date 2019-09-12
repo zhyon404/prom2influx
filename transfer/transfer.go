@@ -3,38 +3,41 @@ package transfer
 import (
 	"context"
 	"encoding/json"
-	"github.com/influxdata/influxdb1-client"
-	"github.com/prometheus/client_golang/api/prometheus/v1"
-	"github.com/prometheus/common/model"
 	"log"
 	"strconv"
 	"sync"
 	"time"
 	"unsafe"
+
+	"github.com/influxdata/influxdb1-client"
+	"github.com/prometheus/client_golang/api/prometheus/v1"
+	"github.com/prometheus/common/model"
 )
 
-func NewTrans(database string, start, end time.Time, step time.Duration, p v1.API, i *client.Client, c, retry int) *Trans {
+func NewTrans(database string, start, end time.Time, step time.Duration, p v1.API, i *client.Client, c, retry int, monitorLabel string) *Trans {
 	return &Trans{
-		Database: database,
-		Start:    start,
-		End:      end,
-		Step:     step,
-		p:        p,
-		i:        i,
-		C:        c,
-		Retry:    retry,
+		Database:     database,
+		Start:        start,
+		End:          end,
+		Step:         step,
+		p:            p,
+		i:            i,
+		C:            c,
+		Retry:        retry,
+		MonitorLabel: monitorLabel,
 	}
 }
 
 type Trans struct {
-	Database string
-	Start    time.Time
-	End      time.Time
-	Step     time.Duration
-	p        v1.API
-	i        *client.Client
-	C        int
-	Retry    int
+	Database     string
+	Start        time.Time
+	End          time.Time
+	Step         time.Duration
+	p            v1.API
+	i            *client.Client
+	C            int
+	Retry        int
+	MonitorLabel string
 }
 
 func (t *Trans) Run(ctx context.Context) error {
@@ -136,7 +139,7 @@ func (t *Trans) runOne(name string) error {
 }
 
 func (t *Trans) valueToInfluxdb(name string, v model.Value) (bps []client.BatchPoints) {
-	var externalLabels = map[string]string{"monitor": "codelab-monitor"}
+	var externalLabels = map[string]string{"monitor": t.MonitorLabel}
 	switch v.(type) {
 	case model.Matrix:
 		v := v.(model.Matrix)

@@ -3,22 +3,25 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/influxdata/influxdb1-client"
-	"github.com/pkg/errors"
-	"github.com/prometheus/client_golang/api"
-	"github.com/prometheus/client_golang/api/prometheus/v1"
-	"gopkg.in/alecthomas/kingpin.v2"
 	"log"
 	"net/url"
 	"os"
 	"path/filepath"
 	"time"
-	"main/transfer"
+
+	"github.com/influxdata/influxdb1-client"
+	"github.com/pkg/errors"
+	"github.com/prometheus/client_golang/api"
+	"github.com/prometheus/client_golang/api/prometheus/v1"
+	"gopkg.in/alecthomas/kingpin.v2"
+
+	"github.com/zhyon404/prom2influx/transfer"
 )
 
 type config struct {
 	influxdbURL      string
 	prometheusURL    string
+	monitorLabel     string
 	influxdbDatabase string
 	start            string
 	end              string
@@ -37,6 +40,8 @@ func parseFlags() *config {
 		Default("").StringVar(&cfg.influxdbURL)
 	a.Flag("prometheus-url", "The URL of the remote prometheus server to read samples to. None, if empty.").
 		Default("").StringVar(&cfg.prometheusURL)
+	a.Flag("monitor-label", "Prometheus Attach these labels to any time series or alerts when communicating with external systems. codelab-monitor, if empty.").
+		Default("codelab-monitor").StringVar(&cfg.monitorLabel)
 	a.Flag("influxdb.database", "The name of the database to use for storing samples in InfluxDB.").
 		Default("prometheus").StringVar(&cfg.influxdbDatabase)
 	a.Flag("start", "The time start.").
@@ -90,6 +95,6 @@ func main() {
 		Address: cfg.prometheusURL,
 	})
 	api := v1.NewAPI(c)
-	t := transfer.NewTrans(cfg.influxdbDatabase, start, end, cfg.step, api, con, cfg.c, cfg.retry)
+	t := transfer.NewTrans(cfg.influxdbDatabase, start, end, cfg.step, api, con, cfg.c, cfg.retry, cfg.monitorLabel)
 	log.Fatalln(t.Run(context.Background()))
 }
